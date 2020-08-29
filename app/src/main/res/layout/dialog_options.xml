@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/borda_dialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecione o passageiro"
+        android:textAlignment="center"
+        android:textColor="#5B8EF6"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/klinsman"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded_button">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/klinsman_face"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Klinsman"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:textColor="#5B8EF6"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/arley"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/rounded_button">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/arley_face" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Arley"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:textColor="#5B8EF6"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+            <LinearLayout
+                android:id="@+id/zeca"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded_button"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/zeca_face"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Zeca"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:textColor="#5B8EF6"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+            <!--
+            <LinearLayout
+                android:id="@+id/ph"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/rounded_button"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ph_face"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="PH"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:textColor="#5B8EF6"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+            -->
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -47,8 +49,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private EditText edtPartidaLat, edtPartidaLng, edtDestinoLat, edtDestinoLng;
     private Button btnTracarTrageto;
-    ImageView btnChoosePassenger;
+    private ImageView btnChoosePassenger;
     private Handler handler;
+    Polyline polyline = null;
     Bitmap carBitmap;
     Marker previousMarker;
     SharedPreferences sharedPreferences;
@@ -134,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return carDrawable;
     }
-    
+
 
     void criarTragetoria() {
         i = 1;
@@ -154,6 +157,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng destino = new LatLng(finalLat, finalLng);
         mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+
+        PolylineOptions polylineOptions = new PolylineOptions().add(partida, destino);
+        polyline = mMap.addPolyline(polylineOptions);
+        polyline.setColor(Color.rgb(80,80,80));
+        polyline.setWidth(5);
 
         LatLng carroMov = new LatLng(initLat + (ratioLat * (i)), initLng + (ratioLng * (i)));
         previousMarker = mMap.addMarker(new MarkerOptions().position(carroMov).title("Motorista")

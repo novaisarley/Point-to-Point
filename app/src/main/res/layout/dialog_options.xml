@@ -43,6 +43,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
                     android:src="@drawable/klinsman_face"/>
 
                 <TextView
@@ -68,6 +69,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
                     android:src="@drawable/arley_face" />
 
                 <TextView
@@ -98,6 +100,7 @@
             <LinearLayout
                 android:id="@+id/zeca"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="10dp"
@@ -107,6 +110,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
                     android:src="@drawable/zeca_face"/>
 
                 <TextView

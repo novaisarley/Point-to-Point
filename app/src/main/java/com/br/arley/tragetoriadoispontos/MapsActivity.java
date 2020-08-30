@@ -1,21 +1,30 @@
 package com.br.arley.tragetoriadoispontos;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -37,14 +47,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private EditText edtPartidaLat, edtPartidaLng, edtDestinoLat, edtDestinoLng;
     private Button btnTracarTrageto;
+    ImageView btnChoosePassenger;
     private Handler handler;
     Bitmap carBitmap;
     Marker previousMarker;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("preferences_key", Context.MODE_PRIVATE);
+
+        if(sharedPreferences.getBoolean("first_time", true)){
+
+            sharedPreferences = getSharedPreferences("preferences_key", Context.MODE_PRIVATE);
+            editor = sharedPreferences.edit();
+
+            showPassengerDialog(sharedPreferences, editor);
+
+            editor.putBoolean("first_time", false);
+            editor.apply();
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -58,9 +85,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         edtDestinoLat = findViewById(R.id.edit_lat_destino);
         edtDestinoLng = findViewById(R.id.edit_lng_destino);
 
+        btnChoosePassenger = findViewById(R.id.bt_choose_passenger);
         btnTracarTrageto = findViewById(R.id.btn_criar_tragetoria);
 
-        Drawable carDrawable = getDrawable(R.drawable.carro_klinsman);
+        Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
+
         Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
         carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
 
@@ -77,7 +106,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        btnChoosePassenger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences = getSharedPreferences("preferences_key", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                showPassengerDialog(sharedPreferences, editor);
+            }
+        });
     }
+
+    Drawable selecionarPassageiro(int carNum){
+        Drawable carDrawable = getDrawable(R.drawable.carro_klinsman);
+
+        switch (carNum){
+            case 1:
+                carDrawable = getDrawable(R.drawable.carro_arley);
+                break;
+            case 2:
+                carDrawable = getDrawable(R.drawable.carro_klinsman);
+                break;
+            case 3:
+                carDrawable = getDrawable(R.drawable.carro_zeca);
+                break;
+        }
+
+        return carDrawable;
+    }
+    
 
     void criarTragetoria() {
         i = 1;
@@ -92,7 +149,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ratioLat = (finalLat - initLat) / divider;
         ratioLng = (finalLng - initLng) / divider;
 
-
         LatLng partida = new LatLng(initLat, initLng);
         mMap.addMarker(new MarkerOptions().position(partida).title("Partida").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
@@ -106,6 +162,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(partida));
 
         moveCarRunnable.run();
+    }
+
+    void showPassengerDialog(final SharedPreferences sharedPreferences, final SharedPreferences.Editor editor){
+
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MapsActivity.this);
+        //mBuilder.setCancelable(false);
+
+        View mView = getLayoutInflater().inflate(R.layout.dialog_options, null);
+        LinearLayout iv_arley = mView.findViewById(R.id.arley);
+        LinearLayout iv_klinsman = mView.findViewById(R.id.klinsman);
+        LinearLayout iv_zeca = mView.findViewById(R.id.zeca);
+
+        mBuilder.setView(mView);
+
+        final AlertDialog dialog = mBuilder.create();
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        iv_arley.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("passageiro", 1);
+                editor.apply();
+                Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
+                Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
+                carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
+                dialog.dismiss();
+            }
+        });
+
+        iv_klinsman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("passageiro", 2);
+                editor.apply();
+                Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
+                Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
+                carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
+                dialog.dismiss();
+            }
+        });
+
+        iv_zeca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("passageiro", 3);
+                editor.apply();
+                Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
+                Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
+                carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     void pararTragetoria() {
@@ -123,8 +236,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             pararTragetoria();
         }
-
-
     }
 
     private Runnable moveCarRunnable = new Runnable() {
@@ -141,6 +252,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         edtDestinoLat.setText("");
         edtDestinoLng.setText("");
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

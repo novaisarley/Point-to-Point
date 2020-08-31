@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -40,6 +41,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -143,6 +147,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         i = 1;
         int divider = 20;
 
+       /* Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<>*/
+
+
         initLat = Double.parseDouble(edtPartidaLat.getText().toString());
         initLng = Double.parseDouble(edtPartidaLng.getText().toString());
 
@@ -234,23 +242,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void moveCar() {
-        if (i <= divider) {
-            if (previousMarker != null) previousMarker.remove();
-            LatLng carroMov = new LatLng(initLat + (ratioLat * (i)), initLng + (ratioLng * (i)));
-            previousMarker = mMap.addMarker(new MarkerOptions().position(carroMov).title("Motorista")
-                    .icon(BitmapDescriptorFactory.fromBitmap(carBitmap)));
-            if (i >= divider) previousMarker = null;
-            i++;
-        }else{
-            pararTragetoria();
-        }
+        if (previousMarker != null) previousMarker.remove();
+        LatLng carroMov = new LatLng(initLat + (ratioLat * (i)), initLng + (ratioLng * (i)));
+        previousMarker = mMap.addMarker(new MarkerOptions().position(carroMov).title("Motorista")
+                .icon(BitmapDescriptorFactory.fromBitmap(carBitmap)));
+        if (i >= divider) previousMarker = null;
+        i++;
     }
 
     private Runnable moveCarRunnable = new Runnable() {
         @Override
         public void run() {
-            moveCar();
-            handler.postDelayed(moveCarRunnable, 1000);
+            if (i <= divider) {
+                moveCar();
+                handler.postDelayed(moveCarRunnable, 1000);
+            }else{
+                pararTragetoria();
+            }
+
         }
     };
 

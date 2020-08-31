@@ -101,9 +101,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:text="Destino"
             android:textColor="#5B8EF6"
+            android:layout_marginTop="10dp"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,8 +113,8 @@
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal"
+            android:layout_marginTop="10dp"
             android:weightSum="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.482"
@@ -145,10 +145,10 @@
                 android:background="@drawable/edit_cordinate"
                 android:ems="10"
                 android:hint="Longitude"
-                android:textColor="#DD6495F8"
                 android:inputType="numberSigned|numberDecimal"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="8dp"
+                android:textColor="#DD6495F8"
                 android:textColorHint="#6F6495F8" />
         </LinearLayout>
 

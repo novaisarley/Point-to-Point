@@ -55,16 +55,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+<!--
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:weightSum="2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            tools:layout_editor_absoluteX="-1dp"
+            tools:layout_editor_absoluteY="36dp">
 
             <EditText
                 android:id="@+id/edit_lat_partida"
@@ -72,13 +72,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:textColor="#DD6495F8"
                 android:background="@drawable/edit_cordinate"
                 android:ems="10"
                 android:hint="Latitude"
                 android:inputType="numberSigned|numberDecimal"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="8dp"
+                android:textColor="#DD6495F8"
                 android:textColorHint="#6F6495F8" />
 
             <EditText
@@ -87,39 +87,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:textColor="#DD6495F8"
                 android:background="@drawable/edit_cordinate"
                 android:ems="10"
                 android:hint="Longitude"
                 android:inputType="numberSigned|numberDecimal"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="8dp"
+                android:textColor="#DD6495F8"
                 android:textColorHint="#6F6495F8" />
         </LinearLayout>
+        -->
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Destino"
             android:textColor="#5B8EF6"
-            android:layout_marginTop="10dp"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/partida" />
+
+        <!--
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
             android:weightSum="2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.482"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="118dp">
 
             <EditText
                 android:id="@+id/edit_lat_destino"
@@ -151,6 +152,43 @@
                 android:textColor="#DD6495F8"
                 android:textColorHint="#6F6495F8" />
         </LinearLayout>
+
+        -->
+
+
+        <EditText
+            android:id="@+id/partida"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:background="@drawable/edit_cordinate"
+            android:hint="Endereço de Partida"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="8dp"
+            android:textColor="#DD6495F8"
+            android:textColorHint="#6F6495F8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <EditText
+            android:id="@+id/destino"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:background="@drawable/edit_cordinate"
+            android:hint="Endereço de Destino"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="8dp"
+            android:textColor="#DD6495F8"
+            android:textColorHint="#6F6495F8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

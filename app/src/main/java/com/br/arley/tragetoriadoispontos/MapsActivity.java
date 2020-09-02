@@ -50,11 +50,13 @@ import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    static int divider = 150;
+    static int divider = 160;
+    static int timeMilis = 100;
     int i = 1;
+    boolean isDriving = false;
     double initLat, initLng, finalLat, finalLng, ratioLat, ratioLng;
     private GoogleMap mMap;
-    private EditText edtPartidaLat, edtPartidaLng, edtDestinoLat, edtDestinoLng, edtPartida, edtDestino;
+    private EditText edtPartida, edtDestino;
     private Button btnTracarTrageto;
     private ImageView btnChoosePassenger;
     private Handler handler;
@@ -92,33 +94,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         handler = new Handler();
 
-        edtPartida = findViewById(R.id.partida);
-        edtDestino = findViewById(R.id.destino);
+        setObjects();
+        setObjectsListeners();
 
-        /*edtPartidaLat = findViewById(R.id.edit_lat_partida);
-        edtPartidaLng = findViewById(R.id.edit_lng_partida);
 
-        edtDestinoLat = findViewById(R.id.edit_lat_destino);
-        edtDestinoLng = findViewById(R.id.edit_lng_destino);*/
-
-        btnChoosePassenger = findViewById(R.id.bt_choose_passenger);
-        btnTracarTrageto = findViewById(R.id.btn_criar_tragetoria);
 
         Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
 
         Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
         carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
 
+
+    }
+
+    private void setObjects() {
+        edtPartida = findViewById(R.id.partida);
+        edtDestino = findViewById(R.id.destino);
+
+        btnChoosePassenger = findViewById(R.id.bt_choose_passenger);
+        btnTracarTrageto = findViewById(R.id.btn_criar_tragetoria);
+    }
+
+    private void setObjectsListeners() {
         btnTracarTrageto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!edtPartida.getText().toString().isEmpty() && !edtPartida.getText().toString().isEmpty() &&
-                        !edtDestino.getText().toString().isEmpty() && !edtDestino.getText().toString().isEmpty()) {
-                    criarTragetoria();
-                    //emptyFields();
-                } else {
-                    Toast.makeText(MapsActivity.this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+                if (!isDriving){
+                    if (!edtPartida.getText().toString().isEmpty() && !edtPartida.getText().toString().isEmpty() &&
+                            !edtDestino.getText().toString().isEmpty() && !edtDestino.getText().toString().isEmpty()) {
+                        criarTragetoria();
+                    } else {
+                        Toast.makeText(MapsActivity.this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(MapsActivity.this, "Espere a viagem atual terminar", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -126,14 +137,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnChoosePassenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferences = getSharedPreferences("preferences_key", Context.MODE_PRIVATE);
-                editor = sharedPreferences.edit();
-                showPassengerDialog(sharedPreferences, editor);
+                if (!isDriving){
+                    sharedPreferences = getSharedPreferences("preferences_key", Context.MODE_PRIVATE);
+                    editor = sharedPreferences.edit();
+                    showPassengerDialog(sharedPreferences, editor);
+                }
+                else{
+                    Toast.makeText(MapsActivity.this, "Espere a viagem atual terminar", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
 
-    Drawable selecionarPassageiro(int carNum){
+    private Drawable selecionarPassageiro(int carNum){
         Drawable carDrawable = getDrawable(R.drawable.carro_klinsman);
 
         switch (carNum){
@@ -145,9 +162,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             case 3:
                 carDrawable = getDrawable(R.drawable.carro_zeca);
-                break;
-            case 4:
-                carDrawable = getDrawable(R.drawable.carro_taina);
                 break;
         }
 
@@ -168,19 +182,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Algo deu errado", Toast.LENGTH_SHORT).show();
-        }
-
-
-        /*initLat = Double.parseDouble(edtPartidaLat.getText().toString());
-        initLng = Double.parseDouble(edtPartidaLng.getText().toString());
-
-        finalLat = Double.parseDouble(edtDestinoLat.getText().toString());
-        finalLng = Double.parseDouble(edtDestinoLng.getText().toString());*/
-
-        if (addressesPartida.isEmpty() || addressesPartida == null || addressesDestino.isEmpty() || addressesDestino == null){
-            Toast.makeText(this, "Endereço não encontrado", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
+        if (addressesPartida.isEmpty() || addressesPartida == null || addressesDestino.isEmpty() || addressesDestino == null){
+            Toast.makeText(this, "Endereço não encontrado. Especifique melhor", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        emptyFields();
+
+        isDriving = true;
 
         initLat = addressesPartida.get(0).getLatitude();
         initLng = addressesPartida.get(0).getLongitude();
@@ -214,13 +227,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void showPassengerDialog(final SharedPreferences sharedPreferences, final SharedPreferences.Editor editor){
 
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MapsActivity.this);
-        //mBuilder.setCancelable(false);
 
         View mView = getLayoutInflater().inflate(R.layout.dialog_options, null);
         LinearLayout iv_arley = mView.findViewById(R.id.arley);
         LinearLayout iv_klinsman = mView.findViewById(R.id.klinsman);
         LinearLayout iv_zeca = mView.findViewById(R.id.zeca);
-        LinearLayout iv_taina = mView.findViewById(R.id.taina);
 
         mBuilder.setView(mView);
 
@@ -268,19 +279,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        iv_taina.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editor.putInt("passageiro", 4);
-                editor.apply();
-                Drawable carDrawable = selecionarPassageiro(sharedPreferences.getInt("passageiro", 2));
-                Bitmap carIcon = ((BitmapDrawable) carDrawable).getBitmap();
-                Toast.makeText(MapsActivity.this, "Táina foi selecionado", Toast.LENGTH_SHORT).show();
-                carBitmap = Bitmap.createScaledBitmap(carIcon, 120, 120, false);
-                dialog.dismiss();
-            }
-        });
-
         dialog.show();
 
     }
@@ -295,7 +293,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng carroMov = new LatLng(initLat + (ratioLat * (i)), initLng + (ratioLng * (i)));
         previousMarker = mMap.addMarker(new MarkerOptions().position(carroMov).title("Motorista")
                 .icon(BitmapDescriptorFactory.fromBitmap(carBitmap)));
-        if (i >= divider) previousMarker = null;
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(carroMov));
+        if (i >= divider) {
+            previousMarker = null;
+            isDriving = false;
+        }
         i++;
     }
 
@@ -304,7 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void run() {
             if (i <= divider) {
                 moveCar();
-                handler.postDelayed(moveCarRunnable, 50);
+                handler.postDelayed(moveCarRunnable, timeMilis);
             }else{
                 pararTragetoria();
             }
@@ -313,10 +315,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     };
 
     void emptyFields() {
-        edtPartidaLat.setText("");
-        edtPartidaLng.setText("");
-        edtDestinoLat.setText("");
-        edtDestinoLng.setText("");
+        edtPartida.setText("");
+        edtDestino.setText("");
     }
 
 

@@ -122,7 +122,7 @@
                     android:layout_marginBottom="10dp"/>
 
             </LinearLayout>
-
+<!--
             <LinearLayout
                 android:id="@+id/taina"
                 android:layout_width="0dp"
@@ -148,6 +148,8 @@
                     android:layout_marginBottom="10dp"/>
 
             </LinearLayout>
+
+            -->
 
 
 
